@@ -56,7 +56,7 @@ export function Layout() {
       </div>
 
       <footer className={styles.footer}>
-        <p>This is some example footer content.</p>
+        <p>happy to see you :)</p>
         <p>
           <AuthAction /> | {COURSE_CREDITS}
         </p>

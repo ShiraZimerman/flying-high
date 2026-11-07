@@ -1,5 +1,104 @@
+/*
+ * The Jerusalem skyline behind the title. The gradient darkens the bottom,
+ * where the text is, so it stays readable over the bright photo.
+ */
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-block-size: clamp(220px, 32vw, 380px);
+  margin-block-end: var(--space-8);
+  padding: var(--space-6);
+  overflow: hidden;
+  color: #fff;
+  background-color: #2a3a4a;
+  background-position: center 40%;
+  background-size: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 -180px 120px -40px rgb(0 0 0 / 0.65);
+}
+
+.title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  text-shadow: 0 2px 12px rgb(0 0 0 / 0.4);
+}
+
+.intro {
+  margin-block-start: var(--space-2);
+  max-inline-size: 36rem;
+  font-size: var(--text-lg);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.5);
+}
+
+.parts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The whole card is the link. */
+.partLink {
+  display: block;
+  block-size: 100%;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+}
+
+.partLink:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-accent);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  block-size: 100%;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.partLink:hover .part {
+  border-color: var(--color-accent);
+}
+
+.partNumber {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+.partTitle {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+
+.partLink:hover .partTitle {
+  color: var(--color-accent);
+}
+
+.partDescription {
+  color: var(--color-text-muted);
+}
+
+.partNote {
+  margin-block-start: auto;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.status {
+  margin-block-start: var(--space-6);
+}
+
 .logos {
   display: flex;
   gap: var(--space-4);
-  margin-block: var(--space-4);
+  margin-block: var(--space-6) var(--space-4);
 }

@@ -38,7 +38,7 @@ export const SUPABASE_ENABLED = Boolean(
 export const SHOW_DEMOS = import.meta.env.VITE_SHOW_DEMOS !== "false";
 
 /** Shown in the header bar and anywhere else the app names itself. */
-export const APP_NAME = "Starter Kit";
+export const APP_NAME = "Flying High";
 
 /** The links and credits in the header and footer. Change them to your own. */
 export const COURSE_GITHUB = "https://github.com/product-jam-2027";

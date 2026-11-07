@@ -128,6 +128,12 @@ describe("htmlToText", () => {
     );
     expect(htmlToText("It&#8217;s a <i>comet</i> .")).toBe("It’s a comet.");
   });
+
+  it("does not split a word that has a tag inside it", () => {
+    expect(
+      htmlToText('Jules Verne<a href="x">\'s</a> (<a href="y">LPI</a>)'),
+    ).toBe("Jules Verne's (LPI)");
+  });
 });
 
 describe("GET /api/nasa/pictures", () => {

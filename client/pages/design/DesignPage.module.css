@@ -212,11 +212,13 @@
   stroke-linejoin: round;
 }
 
+/* On phones the arrows are a quarter longer than the circle, sticking out
+   equally above and below it. From tablets up, exactly as tall as it. */
 .avatar .chevron {
   position: absolute;
-  inset-block: 0;
+  inset-block-start: calc(var(--avatar) * -0.125);
   inline-size: calc(var(--avatar) / 3);
-  block-size: 100%;
+  block-size: calc(var(--avatar) * 1.25);
 }
 
 /* The astronaut is on the right: its arrow is to its left (inline end). */
@@ -378,7 +380,8 @@
 
 /* phone  >  phone  >  phone */
 .phones {
-  --arrow-height: 86px;
+  /* A quarter longer than the circles' 86px, on phones only. */
+  --arrow-height: 108px;
 
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr;
@@ -631,6 +634,11 @@
 
   .phones .chevron {
     --arrow-height: 112px;
+  }
+
+  .avatar .chevron {
+    inset-block-start: 0;
+    block-size: 100%;
   }
 
   .designSystem > * {
