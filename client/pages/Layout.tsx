@@ -32,6 +32,8 @@ export function Layout() {
         </Link>
         <nav className={styles.nav}>
           <Link to="/">Home</Link>
+          <Link to="/tic-tac-toe">Tic-tac-toe</Link>
+          <Link to="/nasa">Space pictures</Link>
           <a href={COURSE_GITHUB} target="_blank" rel="noreferrer">
             GitHub
           </a>

@@ -86,20 +86,32 @@ All of these need a login.
 
 ### Part 2 - Space pictures
 
+The pictures come from NASA's APOD Basic JSON feed,
+`https://science.nasa.gov/wp-json/wp/v2/apod-basic/{YYMMDD}`, which needs no
+key. The old `api.nasa.gov/planetary/apod` answered most dates with a "NASA
+Science" placeholder in November 2026. The feed sends its explanation and credit
+as HTML, so the server turns them into plain text before using them.
+
 **GET /api/nasa/pictures?count=20** - random APOD pictures.
 
 - Receives: `count` in the query, from 1 to 20. If it is missing, 20.
 - Answers: 200 with
-  `{ pictures: [{ date, title, explanation, media_type, image_url, copyright, hebrew }] }`.
-  - `image_url` is the thumbnail when the picture is a video.
+  `{ pictures: [{ date, title, explanation, media_type, image_url, alt, link_url, credit, hebrew }] }`,
+  newest first.
+  - The feed has no "random" option, so the server picks `count` random days and
+    asks NASA for each of them at the same time. Days NASA has no picture for
+    are skipped, so there can be fewer than `count`.
+  - `image_url` is a generic NASA thumbnail when the picture is a video, and
+    `link_url` is the picture's page on science.nasa.gov.
   - `hebrew` is `{ title_he, summary_he, tags }` if the picture was already
     explained, otherwise `null`. That way, a card shows a saved explanation
     without the page asking for it.
 - Errors:
   - 400 if `count` is not a whole number from 1 to 20.
   - 502 if NASA answers with an error, or with something that is not the
-    expected shape.
-  - 504 if NASA does not answer within 10 seconds.
+    expected shape, for every one of the days. If only some days fail, the
+    others are still shown.
+  - 504 if NASA does not answer within 10 seconds, for every one of the days.
   - 500 if the database fails.
 
   NASA's own status code and message are never passed on.
@@ -123,8 +135,9 @@ All of these need a login.
   - 404 if NASA has no picture for that date.
   - 502 if NASA or Gemini answers with an error, or if Gemini's answer does not
     pass the Zod schema.
-  - 503 if Gemini says we are over the free tier's limit (its 429).
-  - 504 if NASA or Gemini does not answer within 30 seconds.
+  - 503 if Gemini says we are over the free tier's limit (its 429), or that it
+    is overloaded (its 503).
+  - 504 if NASA does not answer within 10 seconds, or Gemini within 60.
   - 500 if the database fails.
 - Tables: reads apod_explanations, and writes it when the picture is new.
   - The write is `insert ... on conflict (date) do nothing`, followed by reading
