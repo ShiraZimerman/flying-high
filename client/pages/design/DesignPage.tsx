@@ -86,9 +86,10 @@ export default function DesignPage() {
           מהפלואידיות של מיתוג נאס״א הישן
         </p>
 
-        {/* On wide screens, these pairs sit side by side. */}
-        <div className={styles.pair}>
-          <section className={styles.section}>
+        {/* The design language. Stacked on phones and tablets, in the
+        design's order; laid out as a grid on desktops (see the CSS). */}
+        <div className={styles.designSystem}>
+          <section className={cx(styles.section, styles.inspirationsSection)}>
             <h2 className={styles.heading}>השראות עיצוביות</h2>
             <div className={styles.inspirations}>
               <img
@@ -110,9 +111,6 @@ export default function DesignPage() {
           </section>
 
           <Palette />
-        </div>
-
-        <div className={styles.pair}>
           <LogoBreakdown />
           <Typography />
         </div>
@@ -317,7 +315,7 @@ const PALETTE = [
 
 function Palette() {
   return (
-    <section className={styles.section}>
+    <section className={cx(styles.section, styles.paletteSection)}>
       <h2 className={styles.heading}>פלטה צבעונית</h2>
       <ul className={styles.palette}>
         {PALETTE.map((color) => (
@@ -339,7 +337,7 @@ function Palette() {
 
 function LogoBreakdown() {
   return (
-    <section className={styles.section}>
+    <section className={cx(styles.section, styles.breakdownSection)}>
       <h2 className={styles.heading}>פירוק הלוגו</h2>
       <div className={styles.breakdown}>
         <svg viewBox="0 0 440 290" aria-hidden="true">
@@ -357,7 +355,7 @@ function LogoBreakdown() {
 
 function Typography() {
   return (
-    <section className={styles.section}>
+    <section className={cx(styles.section, styles.typeSection)}>
       <h2 className={styles.heading}>טיפוגרפיה מובילה</h2>
       <div className={styles.type} dir="ltr" lang="en">
         <div className={styles.museo}>

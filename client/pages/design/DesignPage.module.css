@@ -13,8 +13,8 @@
  * Wider screens, as agreed with the designer:
  *   768px and up   the column widens, the two audiences move apart, the
  *                  bubble map grows
- *   1100px and up  the palette sits beside the inspirations, and the
- *                  typography beside the logo breakdown
+ *   1100px and up  the palette sits beside the inspirations, with the
+ *                  typography under it; the logo breakdown is centred below
  * The content stops growing at 1200px wide - the designer left that one to us.
  */
 
@@ -633,13 +633,13 @@
     --arrow-height: 112px;
   }
 
-  .pair > * {
+  .designSystem > * {
     max-inline-size: 520px;
     margin-inline: auto;
   }
 }
 
-/* Desktops: the pairs sit side by side, and everything has more room. */
+/* Desktops: the design language becomes a grid, and everything has more room. */
 @media (min-width: 1100px) {
   .column {
     max-inline-size: 1200px;
@@ -653,17 +653,44 @@
     max-inline-size: 760px;
   }
 
-  .pair {
+  /*
+   * The inspirations on one side; the palette with the typography under it
+   * on the other; the logo breakdown below, in the middle of the screen.
+   * In RTL the first column is on the right.
+   */
+  .designSystem {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* Top-aligned, so the two headings of a pair sit on one line. */
+    grid-template-areas:
+      "inspirations palette"
+      "inspirations type"
+      "breakdown breakdown";
+    /* Top-aligned, so headings side by side sit on one line. */
     align-items: start;
-    gap: 64px;
+    column-gap: 64px;
   }
 
-  .pair > * {
+  .designSystem > * {
     max-inline-size: none;
     margin-inline: 0;
+  }
+
+  .inspirationsSection {
+    grid-area: inspirations;
+  }
+
+  .paletteSection {
+    grid-area: palette;
+  }
+
+  .typeSection {
+    grid-area: type;
+  }
+
+  .designSystem > .breakdownSection {
+    grid-area: breakdown;
+    justify-self: center;
+    inline-size: min(100%, 520px);
   }
 
   .teamSection {
