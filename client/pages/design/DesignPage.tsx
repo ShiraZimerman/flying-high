@@ -39,10 +39,13 @@ export default function DesignPage() {
 
       <div className={styles.column}>
         <header className={styles.hero}>
-          <h1 className={styles.heroLogo}>
-            <Logo />
-          </h1>
-          <p className={styles.tagline}>אפליקציית סרטונים קצרים מהחלל</p>
+          {/* As wide as the logo, so the tagline can line up with its final "t". */}
+          <div className={styles.lockup}>
+            <h1 className={styles.heroLogo}>
+              <Logo />
+            </h1>
+            <p className={styles.tagline}>אפליקציית סרטונים קצרים מהחלל</p>
+          </div>
         </header>
 
         <Audiences />
@@ -63,18 +66,22 @@ export default function DesignPage() {
 
         <section className={cx(styles.section, styles.flow)}>
           <h2 className={styles.heading}>הדמיית פלואו</h2>
-          {/* The flow reads left to right, like the phones in the design. */}
+          {/* The flow reads left to right, like the phones in the design,
+          with the audiences' arrows between them to show which way it goes. */}
           <div className={styles.phones} dir="ltr">
             <img
               src={phone1}
               alt="מסך שאלה: What happens to an egg that breaks in space? מאת Bryan, 17"
             />
+            <Chevron points="right" />
             <img src={phone2} alt="מעבר מהשאלה לתשובה של האסטרונאוטית" />
+            <Chevron points="right" />
             <img src={phone3} alt="סרטון התשובה של אסטרונאוטית בתחנת החלל" />
           </div>
         </section>
 
-        <p className={styles.paragraph}>
+        {/* A new topic, so it stands further from the phones. */}
+        <p className={cx(styles.paragraph, styles.newTopic)}>
           העיצוב החל ממחשבה על הקונספט של חיבור בין עולמות ושאב השראה
           מהפלואידיות של מיתוג נאס״א הישן
         </p>
@@ -162,52 +169,54 @@ function Logo({ small = false }: { small?: boolean }) {
 function Audiences() {
   return (
     <section className={styles.audiences} aria-label="למי זה מיועד">
-      <div className={styles.audienceRow}>
-        <span className={styles.avatar}>
-          <AstronautIcon />
-        </span>
-        <div className={styles.betweenGroup}>
-          <Chevron points="left" />
-          <p className={styles.between}>שאלות ותשובות ביניהם</p>
-          <Chevron points="right" />
-        </div>
-        <span className={styles.avatar}>
-          <PersonIcon />
-        </span>
+      {/* Grid: each circle sits centred above its own text. Each arrow
+      belongs to its circle: as tall as it, a third of its width away. */}
+      <span className={cx(styles.avatar, styles.astronautAvatar)}>
+        <AstronautIcon />
+        <Chevron points="left" />
+      </span>
+      <div className={cx(styles.audienceText, styles.astronautText)}>
+        <h2 className={styles.audienceTitle}>אסטרונאוטים בזמן משימה</h2>
+        <p>שיתוף ידע וחוויות מהחלל, קשר לחיים על כדור הארץ</p>
       </div>
 
-      <div className={styles.audienceText}>
-        <div>
-          <h2 className={styles.audienceTitle}>אסטרונאוטים בזמן משימה</h2>
-          <p>שיתוף ידע וחוויות מהחלל, קשר לחיים על כדור הארץ</p>
-        </div>
-        <div>
-          <h2 className={styles.audienceTitle}>
-            חובבי חלל, תלמידים, משפחה וחברים
-          </h2>
-          <p>הפיכת סקרנות לחוויה מעשירה וגלילה אינסופית לבעלת ערך</p>
-        </div>
+      <p className={styles.between}>שאלות ותשובות ביניהם</p>
+
+      <span className={cx(styles.avatar, styles.personAvatar)}>
+        <PersonIcon />
+        <Chevron points="right" />
+      </span>
+      <div className={cx(styles.audienceText, styles.personText)}>
+        <h2 className={styles.audienceTitle}>
+          חובבי חלל, תלמידים, משפחה וחברים
+        </h2>
+        <p>הפיכת סקרנות לחוויה מעשירה וגלילה אינסופית לבעלת ערך</p>
       </div>
     </section>
   );
 }
 
-/** Points from an avatar toward the middle. Drawn as ">", flipped for "<". */
+/**
+ * The page's arrow: beside the audience circles, and between the phones.
+ * Drawn as ">", flipped for "<". Each section sizes and places it in the
+ * CSS; the line keeps its thickness at any size.
+ */
 function Chevron({ points }: { points: "left" | "right" }) {
   return (
     <svg
-      viewBox="0 0 22 36"
+      viewBox="0 0 16 48"
+      preserveAspectRatio="none"
       className={cx(styles.chevron, points === "left" && styles.flipped)}
       aria-hidden="true"
     >
-      <path d="M5 5 17 18 5 31" />
+      <path d="M3 3 13 24 3 45" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
 
 function PersonIcon() {
   return (
-    <svg viewBox="0 0 48 48" aria-hidden="true">
+    <svg viewBox="0 0 48 48" className={styles.avatarIcon} aria-hidden="true">
       <circle cx="24" cy="15" r="9.5" />
       <path d="M5 44c0-11 8.5-17 19-17s19 6 19 17Z" />
     </svg>
@@ -216,7 +225,7 @@ function PersonIcon() {
 
 function AstronautIcon() {
   return (
-    <svg viewBox="0 0 48 48" aria-hidden="true">
+    <svg viewBox="0 0 48 48" className={styles.avatarIcon} aria-hidden="true">
       {/* Helmet, with its visor cut out. */}
       <path
         fillRule="evenodd"

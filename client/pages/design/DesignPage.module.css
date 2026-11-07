@@ -114,11 +114,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35em;
   min-block-size: calc(100svh - var(--page-top, 0px) - var(--peek));
   padding-block: 32px;
   /* Everything in the opening scales with this. */
   font-size: clamp(48px, 14.5vw, 136px);
+}
+
+/* The page is RTL, so "start" is the right edge: the end of "That". */
+.lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
 }
 
 .heroLogo {
@@ -131,54 +137,96 @@
 }
 
 .tagline {
-  font-size: 0.39em;
+  /* Tucked up under the logo's descenders, as in the design. */
+  margin-block-start: -0.3em !important;
+  font-size: 0.33em;
   line-height: 1.2;
   white-space: nowrap;
 }
 
 /* === Audiences ========================================================= */
 
+/*
+ *   [astronaut] <   questions and answers   > [person]
+ *   [its text ]                               [its text]
+ * In RTL the first column is on the right. Each arrow belongs to its
+ * circle: as tall as it, and a third of its width away from it.
+ */
 .audiences {
+  /* A little smaller on the narrowest phones, so the middle still fits. */
+  --avatar: min(86px, 21cqw);
+  --side: clamp(104px, 28cqw, 200px);
+  /* How far an arrow reaches past its circle: the gap, then the arrow. */
+  --arrow-reach: calc(var(--avatar) * 2 / 3);
+
+  display: grid;
+  grid-template-columns: var(--side) minmax(0, 1fr) var(--side);
+  grid-template-areas:
+    "astronaut between person"
+    "astronaut-text . person-text";
+  row-gap: 14px;
   margin-inline: auto;
+  margin-block-end: 40px;
   padding-inline: 14px;
 }
 
-.audienceRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+.astronautAvatar {
+  grid-area: astronaut;
+}
+
+.personAvatar {
+  grid-area: person;
+}
+
+.astronautText {
+  grid-area: astronaut-text;
+}
+
+.personText {
+  grid-area: person-text;
 }
 
 .avatar {
+  position: relative;
   display: grid;
-  flex-shrink: 0;
+  justify-self: center;
   place-items: center;
-  inline-size: 86px;
-  block-size: 86px;
+  inline-size: var(--avatar);
+  block-size: var(--avatar);
   border-radius: 50%;
   background: var(--copy-light);
 }
 
-.avatar svg {
-  inline-size: 46px;
+.avatarIcon {
+  inline-size: 54%;
   fill: #000;
 }
 
-.betweenGroup {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+/* The look, shared by every arrow on the page. Sizes are set where it's used. */
 .chevron {
   flex-shrink: 0;
-  inline-size: 18px;
   fill: none;
   stroke: var(--copy-cream);
-  stroke-width: 4.5;
+  stroke-width: 5px;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.avatar .chevron {
+  position: absolute;
+  inset-block: 0;
+  inline-size: calc(var(--avatar) / 3);
+  block-size: 100%;
+}
+
+/* The astronaut is on the right: its arrow is to its left (inline end). */
+.astronautAvatar .chevron {
+  inset-inline-end: calc(var(--arrow-reach) * -1);
+}
+
+/* The person is on the left: its arrow is to its right (inline start). */
+.personAvatar .chevron {
+  inset-inline-start: calc(var(--arrow-reach) * -1);
 }
 
 .flipped {
@@ -186,22 +234,22 @@
 }
 
 .between {
+  grid-area: between;
+  align-self: center;
+  /* Keep clear of the arrows, which reach into this column. */
+  padding-inline: max(0px, calc(var(--arrow-reach) - (var(--side) - var(--avatar)) / 2 + 6px));
   color: var(--copy-cream);
-  font-size: var(--text-small);
+  font-size: var(--text-running);
   font-weight: 900;
+  line-height: 1.2;
   text-align: center;
+  text-wrap: balance;
 }
 
+/* Centred, so each circle sits over the middle of its sentences. */
 .audienceText {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  margin-block-start: 14px;
   font-size: var(--text-small);
-}
-
-.audienceText > div {
-  inline-size: 140px;
+  text-align: center;
 }
 
 .audienceTitle {
@@ -219,6 +267,10 @@
   inline-size: min(100% - 48px, 300px);
   margin: 85px auto 0 !important;
   text-align: center;
+}
+
+.newTopic {
+  margin-block-start: 150px !important;
 }
 
 /* Kept for the design's bigger second paragraph; same text style now. */
@@ -324,11 +376,21 @@
   margin-inline: auto;
 }
 
+/* phone  >  phone  >  phone */
 .phones {
+  --arrow-height: 86px;
+
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
   gap: 14px;
-  padding-inline: 15px;
+  padding-inline: 10px;
+}
+
+/* The same arrows as beside the audience circles, at the same size. */
+.phones .chevron {
+  inline-size: calc(var(--arrow-height) / 3);
+  block-size: var(--arrow-height);
 }
 
 .phones img {
@@ -477,9 +539,12 @@
   margin-inline: auto;
 }
 
+/* Bottom-aligned: the photos share one line, and each caption sits right on
+   top of its photo, however many lines it takes. */
 .team {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  align-items: end;
   gap: 14px;
   margin: 0;
   padding: 0 4px;
@@ -490,17 +555,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 8px;
 }
 
 .memberText {
-  min-block-size: 3lh;
   font-size: var(--text-small);
   text-align: center;
 }
 
+/* Smaller than their column, at the designer's request. */
 .member img {
-  inline-size: 100%;
+  inline-size: min(100%, 72px);
   block-size: auto;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -525,20 +590,12 @@
   }
 
   .audiences {
+    --avatar: 112px;
     max-inline-size: 760px;
   }
 
-  .audienceText > div {
-    inline-size: 200px;
-  }
-
-  .avatar {
-    inline-size: 112px;
-    block-size: 112px;
-  }
-
-  .avatar svg {
-    inline-size: 60px;
+  .between {
+    font-size: 20px;
   }
 
   .paragraph,
@@ -555,9 +612,25 @@
     inset-inline-start: 0;
   }
 
-  .flow,
   .teamSection {
     max-inline-size: 620px;
+  }
+
+  .member img {
+    inline-size: 104px;
+  }
+
+  /* The flow spreads out: more room between the phones and the arrows. */
+  .flow {
+    max-inline-size: 720px;
+  }
+
+  .phones {
+    gap: 32px;
+  }
+
+  .phones .chevron {
+    --arrow-height: 112px;
   }
 
   .pair > * {
@@ -583,7 +656,8 @@
   .pair {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: center;
+    /* Top-aligned, so the two headings of a pair sit on one line. */
+    align-items: start;
     gap: 64px;
   }
 
@@ -592,8 +666,15 @@
     margin-inline: 0;
   }
 
-  .flow,
   .teamSection {
     max-inline-size: 760px;
+  }
+
+  .flow {
+    max-inline-size: 1000px;
+  }
+
+  .phones {
+    gap: 56px;
   }
 }
