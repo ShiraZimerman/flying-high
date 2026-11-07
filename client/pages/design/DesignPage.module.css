@@ -1,3 +1,599 @@
-.title {
-  font-size: var(--text-3xl);
+/*
+ * "Copy That", from the designer's 440px-wide Figma frame. The colours are
+ * the design's palette, sampled from the frame.
+ *
+ * Text, as the designer specified it:
+ *   running text  15px, regular, 144% line height
+ *   headings      18px, black (900)
+ *   small text    13px, regular, 144% line height
+ *
+ * The illustrations (bubble map, inspirations, logo breakdown) scale with
+ * their own width, using container query units (cqw: 1% of that width).
+ *
+ * Wider screens, as agreed with the designer:
+ *   768px and up   the column widens, the two audiences move apart, the
+ *                  bubble map grows
+ *   1100px and up  the palette sits beside the inspirations, and the
+ *                  typography beside the logo breakdown
+ * The content stops growing at 1200px wide - the designer left that one to us.
+ */
+
+/*
+ * TheBasics, the designer's Hebrew font (Michal Sahar / Hagilda). Display
+ * Black is the same family at weight 900, so headings just ask for 900.
+ */
+@font-face {
+  font-family: "TheBasics";
+  src: url("./fonts/TheBasics-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TheBasics";
+  src: url("./fonts/TheBasics-DisplayBlack.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+
+.page {
+  --copy-bg: #110a36;
+  --copy-light: #bde3ff;
+  --copy-cream: #f4ebe4;
+  --copy-green: #738b6e;
+  --copy-brown: #75503c;
+  --copy-tan: #baa27e;
+  --copy-violet: #6f8df0;
+  --copy-navy: #04498c;
+  --copy-line: #2f3341;
+
+  --text-running: 15px;
+  --text-heading: 18px;
+  --text-small: 13px;
+
+  /* How much of the next section shows below the opening screen. */
+  --peek: 104px;
+
+  /* Undo the kit's default <main> width and padding: this page is full-bleed. */
+  max-inline-size: none;
+  padding: 0;
+  overflow-x: clip;
+  color: var(--copy-light);
+  background: var(--copy-bg);
+  font-family: "TheBasics", var(--font-body);
+  font-size: var(--text-running);
+  font-weight: 400;
+  line-height: 1.44;
+}
+
+.column {
+  container-type: inline-size;
+  max-inline-size: 440px;
+  margin-inline: auto;
+  padding-block-end: 48px;
+}
+
+.column p,
+.column h1,
+.column h2 {
+  margin: 0;
+}
+
+/* === Logo ============================================================== */
+
+.logo {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.18em;
+  color: var(--copy-light);
+  font-family: "MuseoModerno", var(--font-titles);
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.logoDots {
+  inline-size: 0.95em;
+  fill: currentColor;
+}
+
+.logoSmall {
+  font-size: 27px;
+}
+
+/* === Opening screen ===================================================== */
+
+/*
+ * Fills the window below the site's header (--page-top, measured in
+ * DesignPage.tsx), minus --peek, so the top of the next section shows at
+ * the bottom of the screen and hints that there is more to scroll.
+ */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  min-block-size: calc(100svh - var(--page-top, 0px) - var(--peek));
+  padding-block: 32px;
+  /* Everything in the opening scales with this. */
+  font-size: clamp(48px, 14.5vw, 136px);
+}
+
+.heroLogo {
+  /* The kit's h1 styles would override the logo's font. */
+  font: inherit;
+}
+
+.hero .logo {
+  font-size: 1em;
+}
+
+.tagline {
+  font-size: 0.39em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* === Audiences ========================================================= */
+
+.audiences {
+  margin-inline: auto;
+  padding-inline: 14px;
+}
+
+.audienceRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.avatar {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  inline-size: 86px;
+  block-size: 86px;
+  border-radius: 50%;
+  background: var(--copy-light);
+}
+
+.avatar svg {
+  inline-size: 46px;
+  fill: #000;
+}
+
+.betweenGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chevron {
+  flex-shrink: 0;
+  inline-size: 18px;
+  fill: none;
+  stroke: var(--copy-cream);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.flipped {
+  transform: scaleX(-1);
+}
+
+.between {
+  color: var(--copy-cream);
+  font-size: var(--text-small);
+  font-weight: 900;
+  text-align: center;
+}
+
+.audienceText {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-block-start: 14px;
+  font-size: var(--text-small);
+}
+
+.audienceText > div {
+  inline-size: 140px;
+}
+
+.audienceTitle {
+  margin-block-end: 4px !important;
+  color: var(--copy-cream);
+  font-family: inherit;
+  font-size: var(--text-small);
+  font-weight: 900;
+  line-height: 1.44;
+}
+
+/* === Paragraphs and headings ============================================ */
+
+.paragraph {
+  inline-size: min(100% - 48px, 300px);
+  margin: 85px auto 0 !important;
+  text-align: center;
+}
+
+/* Kept for the design's bigger second paragraph; same text style now. */
+.paragraphLarge {
+  inline-size: min(100% - 48px, 300px);
+}
+
+.section {
+  margin-block-start: 90px;
+}
+
+.heading {
+  margin-block-end: 24px !important;
+  padding-inline: 37px;
+  color: var(--copy-light);
+  font-family: inherit;
+  font-size: var(--text-heading);
+  font-weight: 900;
+}
+
+/* === Feature bubble map ================================================= */
+
+.features {
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 440 / 460;
+  margin-block-start: 60px;
+  margin-inline: auto;
+}
+
+.featureLinks {
+  position: absolute;
+  inset: 0;
+  stroke: var(--copy-line);
+  stroke-width: 16;
+}
+
+.featureList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bubble,
+.featuresTitle {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: var(--copy-bg);
+  text-align: center;
+}
+
+.bubble {
+  inline-size: 20.9%;
+  padding: 3.4cqw;
+  font-size: 3.4cqw;
+  line-height: 1.15;
+}
+
+/* Hangs off the edge of the screen on phones, as in the design. */
+.featuresTitle {
+  inset-block-start: 1.2%;
+  inset-inline-start: -7.8%;
+  inline-size: 39.3%;
+  padding: 6cqw;
+  background: var(--copy-green);
+  font-family: inherit;
+  font-size: 4.6cqw;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.light {
+  background: var(--copy-light);
+}
+
+.violet {
+  background: var(--copy-violet);
+}
+
+.dark {
+  color: var(--copy-cream);
+  background: var(--copy-bg);
+}
+
+.tan {
+  background: var(--copy-tan);
+}
+
+.white {
+  background: #fff;
+}
+
+.brown {
+  background: var(--copy-brown);
+}
+
+/* === Flow mock-ups ====================================================== */
+
+.flow {
+  margin-inline: auto;
+}
+
+.phones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding-inline: 15px;
+}
+
+.phones img {
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* === Inspirations ======================================================= */
+
+.inspirations {
+  position: relative;
+  aspect-ratio: 440 / 515;
+}
+
+.inspirations img {
+  position: absolute;
+  aspect-ratio: 1;
+  block-size: auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.inspirationWave {
+  inset-block-start: 1.2%;
+  inset-inline-start: 8.4%;
+  inline-size: 55.5%;
+}
+
+.inspirationNasa {
+  inset-block-start: 48.5%;
+  inset-inline-start: 8.5%;
+  inline-size: 59.8%;
+}
+
+.inspirationDots {
+  inset-block-start: 21.6%;
+  inset-inline-start: 47.3%;
+  inline-size: 45.9%;
+}
+
+/* === Palette ============================================================ */
+
+.palette {
+  display: grid;
+  /* 71px circles, as designed, shrinking on phones narrower than 375px. */
+  grid-template-columns: repeat(4, min(71px, 18cqw));
+  justify-content: space-between;
+  row-gap: 19px;
+  margin: 0;
+  padding: 0 30px;
+  list-style: none;
+}
+
+.swatch {
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+/* The cream and the background need an outline to be seen, as in the design. */
+.swatch:nth-child(5) {
+  box-shadow: inset 0 0 0 1.5px #000;
+}
+
+.swatch:nth-child(8) {
+  box-shadow: inset 0 0 0 1.5px #8a8a8a;
+}
+
+.visuallyHidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* === Logo breakdown ===================================================== */
+
+.breakdown {
+  position: relative;
+  aspect-ratio: 440 / 290;
+}
+
+.breakdown svg {
+  position: absolute;
+  inset: 0;
+  fill: none;
+  stroke: var(--copy-brown);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.breakdown .breakdownDot {
+  fill: var(--copy-light);
+  stroke: none;
+}
+
+.breakdownStar,
+.breakdownEarth {
+  position: absolute;
+  font-size: var(--text-small);
+}
+
+.breakdownStar {
+  inset-block-start: -4%;
+  inset-inline-start: 8.4%;
+}
+
+.breakdownEarth {
+  inset-block-start: 88%;
+  inset-inline-end: 8%;
+}
+
+/* === Typography ========================================================= */
+
+.type {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-inline: 30px;
+  font-size: 20px;
+  line-height: 1.25;
+  /* The alphabet samples are one long "word": let them wrap on small phones. */
+  overflow-wrap: anywhere;
+}
+
+.museo {
+  font-family: "MuseoModerno", var(--font-titles);
+  font-weight: 600;
+}
+
+.alatsi {
+  font-family: "Alatsi", var(--font-titles);
+}
+
+.typeSample {
+  margin-block-end: 8px !important;
+  font-size: 44px;
+  line-height: 1.1;
+}
+
+/* === Team =============================================================== */
+
+.teamSection {
+  margin-inline: auto;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 0;
+  padding: 0 4px;
+  list-style: none;
+}
+
+.member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.memberText {
+  min-block-size: 3lh;
+  font-size: var(--text-small);
+  text-align: center;
+}
+
+.member img {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* === Footer ============================================================= */
+
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 50px;
+}
+
+/* === Wider screens ====================================================== */
+
+/* Tablets: the column widens, the audiences move apart, the map grows. */
+@media (min-width: 768px) {
+  .column {
+    max-inline-size: 760px;
+    padding-inline: 32px;
+  }
+
+  .audiences {
+    max-inline-size: 760px;
+  }
+
+  .audienceText > div {
+    inline-size: 200px;
+  }
+
+  .avatar {
+    inline-size: 112px;
+    block-size: 112px;
+  }
+
+  .avatar svg {
+    inline-size: 60px;
+  }
+
+  .paragraph,
+  .paragraphLarge {
+    inline-size: 440px;
+  }
+
+  .features {
+    max-inline-size: 620px;
+  }
+
+  /* No screen edge to hang off any more: keep it inside the map. */
+  .featuresTitle {
+    inset-inline-start: 0;
+  }
+
+  .flow,
+  .teamSection {
+    max-inline-size: 620px;
+  }
+
+  .pair > * {
+    max-inline-size: 520px;
+    margin-inline: auto;
+  }
+}
+
+/* Desktops: the pairs sit side by side, and everything has more room. */
+@media (min-width: 1100px) {
+  .column {
+    max-inline-size: 1200px;
+  }
+
+  .audiences {
+    max-inline-size: 960px;
+  }
+
+  .features {
+    max-inline-size: 760px;
+  }
+
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 64px;
+  }
+
+  .pair > * {
+    max-inline-size: none;
+    margin-inline: 0;
+  }
+
+  .flow,
+  .teamSection {
+    max-inline-size: 760px;
+  }
 }
