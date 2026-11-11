@@ -13,10 +13,9 @@ import { fetchWithTimeout, UpstreamError } from "./upstream";
  * only ever send NASA's public title and explanation: nothing about the user.
  */
 
-// Gemma 4 31B, served by the same Gemini API. On the free tier in November
-// 2026, the Flash models were overloaded or refused our key, while this one
-// answered reliably.
-export const GEMINI_MODEL = "gemma-4-31b-it";
+// A current Flash model, as the assignment asks. Flash Lite answers in about a
+// second on the free tier; gemini-3.6-flash was overloaded (503) when we tried.
+export const GEMINI_MODEL = "gemini-3.5-flash-lite";
 
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 // Long, because a busy free tier took 40 seconds to answer.
